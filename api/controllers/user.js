@@ -52,8 +52,8 @@ exports.user_login =(req,res,next)=>{
                 message:'Auth failed'
             });  
         }
-        bcrypt.compare(req.body.password,user[0].password,(err,result)=>{
-            if(err){
+        bcrypt.compare(req.body.password,user[0].password,(error,result)=>{
+            if(error){
                 return res.status(401).json({
                     message:'Auth failed'
                 });  
