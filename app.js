@@ -6,9 +6,10 @@ const mongoose =  require('mongoose');
 
 const ProductRoutes = require('./api/routes/products');
 const userRoutes = require('./api/routes/user');
-
+// mongodb+srv://node-witrrade:saurav@witrrade.rsoj5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&ssl=true
+// mongodb://localhost:27017/Witrrade
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/Witrrade', { useNewUrlParser: true,useUnifiedTopology: true }).then(() => {
+mongoose.connect('mongodb+srv://node-witrrade:saurav@witrrade.rsoj5.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&ssl=true', { useNewUrlParser: true,useUnifiedTopology: true }).then(() => {
     console.log("Connected to MongoDB successfully :)");
 }).catch((e) => {
     console.log("Error while attempting to connect to MongoDB");
