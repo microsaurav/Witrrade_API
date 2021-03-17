@@ -2,7 +2,7 @@ const Product = require('../models/product');
 const mongoose = require('mongoose');
 
 exports.products_get_all =  (req, res, next) => {
-    Product.find().select('name price _id productImage').exec().then(docs => {
+    Product.find().select('name price _id productImage title description').exec().then(docs => {
        const response = {
            count: docs.length,
            products: docs.map(doc => {
@@ -10,6 +10,8 @@ exports.products_get_all =  (req, res, next) => {
                    name: doc.name,
                    price:doc.price,
                    productImage:doc.productImage,
+                   title:doc.title,
+                   description:doc.description,
                    _id : doc._id,
                    request:{
                        type : 'GET',
@@ -66,7 +68,7 @@ exports.products_create_product =  (req, res, next) => {
 exports.products_get_product = (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
-        .select('name price _id productImage').exec()
+        .select('name price _id productImage title description').exec()
         .then(doc => {
             console.log(doc);
             if (doc) {

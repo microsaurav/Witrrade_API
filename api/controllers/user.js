@@ -3,6 +3,59 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user');
 
+exports.user_profile = (req,res,next)=>{
+    User.find().select('name phoneNumber _Id email').exec().then(docs =>{
+        const response = {
+            users: docs.map(doc => {
+                return {
+                    name: doc.name,
+                    phoneNumber:doc.phoneNumber,
+                    email:doc.email,
+                    _id : doc._id,
+                    request:{
+                        type : 'GET',
+                        url: 'http://localhost:3000/user/profile/'+doc._id
+                    }
+                }
+            })
+        }
+         // if(doc.length >= 0){
+         res.status(200).json(response);
+     })
+         .catch(err => {
+             console.log(err);
+             res.status(500).json({
+                 error: err
+             });
+         });
+ }
+
+ exports.user_get_profile = (req, res, next) => {
+    const id = req.params.profileId;
+    User.findById(id)
+        .select('name phoneNumber _id email').exec()
+        .then(doc => {
+            console.log(doc);
+            if (doc) {
+                res.status(200).json({
+                  profile: doc,
+                  request: {
+                      type:'GET',
+                      url:"http://localhost:3000/profile"
+                  }
+                });
+            } 
+            else {
+                res.status(404).json({ message: 'No valid entry found for provided ID' });
+            }
+        
+})
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: err });
+        });
+}
+
 exports.user_signup= (req, res, next) => {
     User.find({email:req.body.email}).exec().then(user =>{
         if(user.length >= 1){
