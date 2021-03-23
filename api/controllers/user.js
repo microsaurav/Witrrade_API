@@ -76,15 +76,25 @@ exports.user_signup= (req, res, next) => {
                       name:req.body.name,
                       phoneNumber:req.body.phoneNumber,
                       email: req.body.email,
-                      password: hash
+                      password: hash,
                   });
                   user.save()
                   .then(result =>{
                       console.log(result)
-                      res.status(201).json({
-                          message:"User created"
+                          const token= jwt.sign({
+                            email:req.body.email,
+                            userID: new mongoose.Types.ObjectId(),
+                        },
+                       "secret",
+                        {
+                            expiresIn: "1h"
+                        })
+                        return res.status(200).json({
+                            message:"User created",
+                            token:token
+                        });
                       })
-                  }).catch(err =>{
+                  .catch(err =>{
                       console.log(err)
                       return res.status(500).json({
                           error: err
