@@ -31,7 +31,9 @@ exports.user_profile = (req,res,next)=>{
  }
 
  exports.user_get_profile = (req, res, next) => {
-    const id = req.params.profileId;
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token,"secret");
+    const id = decoded.userID;
     User.findById(id)
         .select('name phoneNumber _id email').exec()
         .then(doc => {
@@ -87,7 +89,7 @@ exports.user_signup= (req, res, next) => {
                         },
                        "secret",
                         {
-                            expiresIn: "1h"
+                            expiresIn: "10000000020000h"
                         })
                         return res.status(200).json({
                             message:"User created",
@@ -128,7 +130,7 @@ exports.user_login =(req,res,next)=>{
                 },
                "secret",
                 {
-                    expiresIn: "1h"
+                    expiresIn: "10000000000000002h"
                 })
                 return res.status(200).json({
                     message:'Auth successful',
