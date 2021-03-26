@@ -80,7 +80,7 @@ exports.products_create_product = async (req, res, next) => {
 exports.products_get_product = (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
-        .select('name price _id productImage title description').exec()
+        .select('name price _id productImage title description sellerContact').exec()
         .then(doc => {
             console.log(doc);
             if (doc) {
