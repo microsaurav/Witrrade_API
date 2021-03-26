@@ -5,11 +5,11 @@ const checkAuth = require('../middleware/check-auth');
 const ProductsController = require('../controllers/products');
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
-     cb(null,'./uploads')
+     cb(null,'./uploads/')
     },
     filename: function(req, file,cb){
-        // cb(null,new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname);
-        cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+        cb(null,new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname);
+        // cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
     }
 });
 const fileFilter = (req,file,cb)=>{

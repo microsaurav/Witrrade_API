@@ -1,8 +1,14 @@
 const Product = require('../models/product');
 const mongoose = require('mongoose');
+const UserController = require('./user');
+const user = require('../models/user');
+const jwt = require('jsonwebtoken')
+
 
 exports.products_get_all =  (req, res, next) => {
-    Product.find().select('name price _id productImage title description').exec().then(docs => {
+   
+     Product.find().exec().then(docs => {
+ 
        const response = {
            count: docs.length,
            products: docs.map(doc => {
@@ -12,6 +18,7 @@ exports.products_get_all =  (req, res, next) => {
                    productImage:doc.productImage,
                    title:doc.title,
                    description:doc.description,
+                   sellerContact: doc.sellerContact,
                    _id : doc._id,
                    request:{
                        type : 'GET',
@@ -31,7 +38,11 @@ exports.products_get_all =  (req, res, next) => {
         });
 }
 
-exports.products_create_product =  (req, res, next) => {
+exports.products_create_product = async (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token,"secret");
+    const userID = decoded.userID;
+    const userDoc =  await user.findById(userID)
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -39,6 +50,7 @@ exports.products_create_product =  (req, res, next) => {
         productImage:req.file.path,
         title:req.body.title,
         description:req.body.description,
+        sellerContact: userDoc.phoneNumber
     })
     product.save().then(result => {
         console.log(result);
@@ -48,7 +60,7 @@ exports.products_create_product =  (req, res, next) => {
                 price:result.price,
                 title:result.title,
                 description:result.description,
-
+                sellerContact: result.sellerContact,
                 _id : result._id,
                 request:{
                     type:'GET',
